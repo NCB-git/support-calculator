@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Federal Child Support Calculator</title>
+    <style>
+        :root {
+            --primary: #0056b3;
+            --bg: #f8f9fa;
+            --text: #333;
+            --border: #ccc;
+        }
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            max-width: 500px;
+            margin: 40px auto;
+            padding: 24px;
+            background-color: var(--bg);
+            color: var(--text);
+        }
+        .calculator-card {
+            background: #ffffff;
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            border: 1px solid #e1e4e8;
+        }
+        h2 { margin-top: 0; color: var(--primary); font-size: 1.5rem; border-bottom: 2px solid #e1e4e8; padding-bottom: 8px;}
+        .input-group { margin-bottom: 18px; }
+        label { display: block; margin-bottom: 6px; font-weight: 600; font-size: 0.95rem; }
+        input, select { width: 100%; padding: 10px; box-sizing: border-box; border: 1px solid var(--border); border-radius: 6px; font-size: 1rem; }
+        input:focus, select:focus { outline: 2px solid var(--primary); border-color: transparent; }
+        .result-box { margin-top: 24px; padding: 18px; background: #e9f4ff; border-left: 4px solid var(--primary); border-radius: 0 6px 6px 0; }
+        .result-label { font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.5px; color: #555; font-weight: bold;}
+        .result-value { font-size: 1.8rem; font-weight: 800; color: #003d82; margin-top: 4px; }
+        .disclaimer { font-size: 0.75rem; color: #666; margin-top: 24px; line-height: 1.4; text-align: justify;}
+    </style>
+</head>
+<body>
+
+<div class="calculator-card">
+    <h2>Child Support Calculator</h2>
+    
+    <div class="input-group">
+        <label for="province">Province/Territory of Payor:</label>
+        <select id="province" onchange="calculate()">
+            <option value="ON">Ontario (ON)</option>
+            <option value="BC">British Columbia (BC)</option>
+            <option value="AB">Alberta (AB)</option>
+            <option value="QC">Quebec (QC)</option>
+            <option value="NS">Nova Scotia (NS)</option>
+            <option value="NB">New Brunswick (NB)</option>
+            <option value="MB">Manitoba (MB)</option>
+            <option value="PE">Prince Edward Island (PEI)</option>
+            <option value="SK">Saskatchewan (SK)</option>
+            <option value="NL">Newfoundland & Labrador (NL)</option>
+        </select>
+    </div>
+
+    <div class="input-group">
+        <label for="children">Number of Children:</label>
+        <select id="children" onchange="calculate()">
+            <option value="1">1 Child</option>
+            <option value="2">2 Children</option>
+            <option value="3">3 Children</option>
+            <option value="4">4+ Children</option>
+        </select>
+    </div>
+
+    <div class="input-group">
+        <label for="income">Payor's Annual Gross Income ($):</label>
+        <input type="number" id="income" value="60000" min="0" step="1000" oninput="calculate()">
+    </div>
+
+    <div class="result-box">
+        <div class="result-label">Estimated Monthly Support</div>
+        <div class="result-value" id="output">$0.00</div>
+    </div>
+
+    <div class="disclaimer">
+        <strong>Disclaimer:</strong> This simplified calculator uses generalized linear approximations based on historical Federal Child Support Table structures for educational and hosting demonstration purposes. Actual legal obligations depend on exact provincial simplified tables, section 7 special expenses, and split/shared custody arrangements. Consult a family law professional or official government tables for legal calculations.
+    </div>
+</div>
+
+<script>
+    // Simplified baseline math matrix mapping base values + marginal rates for demo purposes
+    const provincialBaseRates = {
+        ON: { base1: 50, rate1: 0.0085, base2: 90, rate2: 0.0140 },
+        BC: { base1: 48, rate1: 0.0082, base2: 88, rate2: 0.0138 },
+        AB: { base1: 52, rate1: 0.0087, base2: 92, rate2: 0.0142 },
+        QC: { base1: 42, rate1: 0.0075, base2: 78, rate2: 0.0125 },
+        NS: { base1: 47, rate1: 0.0084, base2: 86, rate2: 0.0139 },
+        NB: { base1: 46, rate1: 0.0081, base2: 85, rate2: 0.0135 },
+        MB: { base1: 49, rate1: 0.0083, base2: 89, rate2: 0.0137 },
+        PE: { base1: 45, rate1: 0.0080, base2: 84, rate2: 0.0134 },
+        SK: { base1: 51, rate1: 0.0086, base2: 91, rate2: 0.0141 },
+        NL: { base1: 46, rate1: 0.0082, base2: 85, rate2: 0.0136 }
+    };
+
+    // 1. Parse URL Parameters on Load
+    window.addEventListener('DOMContentLoaded', () => {
+        const urlParams = new URLSearchParams(window.location.search);
+        
+        if (urlParams.has('prov')) document.getElementById('province').value = urlParams.get('prov');
+        if (urlParams.has('kids')) document.getElementById('children').value = urlParams.get('kids');
+        if (urlParams.has('inc')) document.getElementById('income').value = urlParams.get('inc');
+        
+        calculate(false); // Evaluate initial load state without bloating historical browser stack
+    });
+
+    // 2. Process math engine and write states back to URL structure
+    function calculate(updateURL = true) {
+        const province = document.getElementById('province').value;
+        const childrenCount = parseInt(document.getElementById('children').value) || 1;
+        const income = Math.max(0, parseFloat(document.getElementById('income').value) || 0);
+        
+        // Dynamic formula calculation logic simulating step tables
+        const geoFactors = provincialBaseRates[province] || provincialBaseRates['ON'];
+        let monthlyBase = childrenCount > 1 ? geoFactors.base2 : geoFactors.base1;
+        let scaleRate = childrenCount > 1 ? geoFactors.rate2 : geoFactors.rate1;
+        
+        // Compound multiplier framework per added minor child
+        let structuralMultiplier = 1.0;
+        if (childrenCount === 3) structuralMultiplier = 1.35;
+        if (childrenCount === 4) structuralMultiplier = 1.60;
+
+        let totalMonthlySupport = 0;
+        if (income > 12000) {
+            totalMonthlySupport = (monthlyBase + ((income - 12000) * scaleRate)) * structuralMultiplier;
+        }
+
+        // Render localized currency presentation
+        document.getElementById('output').innerText = new Intl.NumberFormat('en-CA', {
+            style: 'currency',
+            currency: 'CAD'
+        }).format(totalMonthlySupport);
+
+        // Update the browser URL without forcing a screen refresh
+        if (updateURL) {
+            const params = new URLSearchParams();
+            params.set('prov', province);
+            params.set('kids', childrenCount);
+            params.set('inc', income);
+            
+            const dynamicRoute = `${window.location.pathname}?${params.toString()}`;
+            window.history.replaceState({}, '', dynamicRoute);
+        }
+    }
+</script>
+</body>
+</html>
