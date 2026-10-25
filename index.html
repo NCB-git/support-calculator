@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Federal Child Support Calculator</title>
+    <title>Canadian Child and Spousal Support Calculator</title>
     <style>
         :root {
             --primary: #0056b3;
@@ -13,78 +13,127 @@
         }
         body {
             font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            max-width: 500px;
+            max-width: 700px;
             margin: 40px auto;
             padding: 24px;
             background-color: var(--bg);
             color: var(--text);
         }
         .calculator-card {
-            background: #ffffff;
+            background: #fff;
             padding: 24px;
             border-radius: 12px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.08);
             border: 1px solid #e1e4e8;
         }
-        h2 { margin-top: 0; color: var(--primary); font-size: 1.5rem; border-bottom: 2px solid #e1e4e8; padding-bottom: 8px;}
+        h1 { margin-top: 0; color: var(--primary); font-size: 1.5rem; border-bottom: 2px solid #e1e4e8; padding-bottom: 8px; }
+        h2 { margin: 0; color: var(--primary); font-size: 1.2rem; }
+        p { line-height: 1.5; }
+        .input-grid, .scenario-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 16px; }
         .input-group { margin-bottom: 18px; }
         label { display: block; margin-bottom: 6px; font-weight: 600; font-size: 0.95rem; }
         input, select { width: 100%; padding: 10px; box-sizing: border-box; border: 1px solid var(--border); border-radius: 6px; font-size: 1rem; }
-        input:focus, select:focus { outline: 2px solid var(--primary); border-color: transparent; }
-        .result-box { margin-top: 24px; padding: 18px; background: #e9f4ff; border-left: 4px solid var(--primary); border-radius: 0 6px 6px 0; }
-        .result-label { font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.5px; color: #555; font-weight: bold;}
-        .result-value { font-size: 1.8rem; font-weight: 800; color: #003d82; margin-top: 4px; }
-        .disclaimer { font-size: 0.75rem; color: #666; margin-top: 24px; line-height: 1.4; text-align: justify;}
+        input:focus, select:focus, summary:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+        small { display: block; margin-top: 6px; color: #555; line-height: 1.4; }
+        details { margin-top: 12px; }
+        details > summary { cursor: pointer; font-weight: 700; color: var(--primary); padding: 10px 0; }
+        .scenario-grid { margin-top: 8px; }
+        .scenario-card { padding: 16px; margin-bottom: 12px; background: #f8fbff; border: 1px solid #d9e7f5; border-radius: 8px; }
+        .scenario-card h3 { margin: 0 0 10px; font-size: 1.05rem; }
+        .scenario-value { color: #003d82; font-size: 1.35rem; font-weight: 800; }
+        .scenario-detail { margin: 8px 0 0; color: #555; font-size: 0.9rem; line-height: 1.45; }
+        .disclaimer { font-size: 0.8rem; color: #666; margin-top: 24px; line-height: 1.5; }
+        @media (max-width: 560px) {
+            body { margin: 12px auto; padding: 12px; }
+            .calculator-card { padding: 18px; }
+            .input-grid, .scenario-grid { grid-template-columns: 1fr; }
+        }
     </style>
 </head>
 <body>
+<main class="calculator-card">
+    <h1>Support Calculator</h1>
+    <p>Enter the family's details once to compare child-only, spousal-only, and combined support estimates.</p>
 
-<div class="calculator-card">
-    <h2>Child Support Calculator</h2>
-    
-    <div class="input-group">
-        <label for="province">Province/Territory of Payor:</label>
-        <select id="province" onchange="calculate()">
-            <option value="ON">Ontario (ON)</option>
-            <option value="BC">British Columbia (BC)</option>
-            <option value="AB">Alberta (AB)</option>
-            <option value="QC">Quebec (QC)</option>
-            <option value="NS">Nova Scotia (NS)</option>
-            <option value="NB">New Brunswick (NB)</option>
-            <option value="MB">Manitoba (MB)</option>
-            <option value="PE">Prince Edward Island (PEI)</option>
-            <option value="SK">Saskatchewan (SK)</option>
-            <option value="NL">Newfoundland & Labrador (NL)</option>
-        </select>
-    </div>
+    <section aria-labelledby="familyDetailsHeading">
+        <h2 id="familyDetailsHeading">Family details</h2>
+        <div class="input-grid">
+            <div class="input-group">
+                <label for="payorIncome">Higher-income spouse's annual gross income ($):</label>
+                <input type="number" id="payorIncome" value="80000" min="0" step="1000" oninput="calculate()">
+            </div>
+            <div class="input-group">
+                <label for="recipientIncome">Lower-income spouse's annual gross income ($):</label>
+                <input type="number" id="recipientIncome" value="40000" min="0" step="1000" oninput="calculate()">
+            </div>
+            <div class="input-group">
+                <label for="relationshipYears">Years of marriage or cohabitation:</label>
+                <input type="number" id="relationshipYears" value="10" min="0" max="80" step="0.5" oninput="calculate()">
+            </div>
+        </div>
+        <details>
+            <summary>Advanced inputs</summary>
+            <div class="input-grid">
+                <div class="input-group">
+                    <label for="province">Province or territory:</label>
+                    <select id="province" onchange="calculate()">
+                        <option value="ON">Ontario (ON)</option>
+                        <option value="BC">British Columbia (BC)</option>
+                        <option value="AB">Alberta (AB)</option>
+                        <option value="QC">Quebec (QC)</option>
+                        <option value="NS">Nova Scotia (NS)</option>
+                        <option value="NB">New Brunswick (NB)</option>
+                        <option value="MB">Manitoba (MB)</option>
+                        <option value="PE">Prince Edward Island (PEI)</option>
+                        <option value="SK">Saskatchewan (SK)</option>
+                        <option value="NL">Newfoundland &amp; Labrador (NL)</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label for="children">Number of children:</label>
+                    <select id="children" onchange="calculate()">
+                        <option value="1">1 child</option>
+                        <option value="2">2 children</option>
+                        <option value="3">3 children</option>
+                        <option value="4">4+ children</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label for="recipientAge">Lower-income spouse's age at separation:</label>
+                    <input type="number" id="recipientAge" value="40" min="18" max="100" step="1" oninput="calculate()">
+                    <small>Used only for the Rule of 65 duration test in the spousal-only estimate.</small>
+                </div>
+            </div>
+        </details>
+    </section>
 
-    <div class="input-group">
-        <label for="children">Number of Children:</label>
-        <select id="children" onchange="calculate()">
-            <option value="1">1 Child</option>
-            <option value="2">2 Children</option>
-            <option value="3">3 Children</option>
-            <option value="4">4+ Children</option>
-        </select>
-    </div>
+    <details open>
+        <summary>Compare support scenarios</summary>
+        <div class="scenario-grid">
+            <article class="scenario-card">
+                <h3>Child support only</h3>
+                <div class="scenario-value" id="childResult">$0.00 per month</div>
+                <p class="scenario-detail" id="childDetail"></p>
+            </article>
+            <article class="scenario-card">
+                <h3>Spousal support only</h3>
+                <div class="scenario-value" id="spousalResult">$0.00–$0.00 per month</div>
+                <p class="scenario-detail" id="spousalDetail"></p>
+            </article>
+            <article class="scenario-card">
+                <h3>Child and spousal support</h3>
+                <div class="scenario-value" id="combinedResult">$0.00–$0.00 per month</div>
+                <p class="scenario-detail" id="combinedDetail"></p>
+            </article>
+        </div>
+    </details>
 
-    <div class="input-group">
-        <label for="income">Payor's Annual Gross Income ($):</label>
-        <input type="number" id="income" value="60000" min="0" step="1000" oninput="calculate()">
-    </div>
-
-    <div class="result-box">
-        <div class="result-label">Estimated Monthly Support</div>
-        <div class="result-value" id="output">$0.00</div>
-    </div>
-
-    <div class="disclaimer">
-        <strong>Disclaimer:</strong> This simplified calculator uses generalized linear approximations based on historical Federal Child Support Table structures for educational and hosting demonstration purposes. Actual legal obligations depend on exact provincial simplified tables, section 7 special expenses, and split/shared custody arrangements. Consult a family law professional or official government tables for legal calculations.
-    </div>
-</div>
+    <p class="disclaimer">
+        <strong>Disclaimer:</strong> Estimates are simplified and for general information only—not legal, financial, or tax advice. The child-support estimate does not use official tables. Spousal-support ranges are based on simplified Spousal Support Advisory Guidelines formulas and do not determine entitlement. The combined estimate uses a rough 25% deduction from annual gross income to approximate net income; it does not model individual taxes, benefits, or other guideline adjustments. Actual outcomes depend on individual circumstances. Check official resources and consult a qualified family law professional.
+    </p>
+</main>
 
 <script>
-    // Simplified baseline math matrix mapping base values + marginal rates for demo purposes
     const provincialBaseRates = {
         ON: { base1: 50, rate1: 0.0085, base2: 90, rate2: 0.0140 },
         BC: { base1: 48, rate1: 0.0082, base2: 88, rate2: 0.0138 },
@@ -97,56 +146,128 @@
         SK: { base1: 51, rate1: 0.0086, base2: 91, rate2: 0.0141 },
         NL: { base1: 46, rate1: 0.0082, base2: 85, rate2: 0.0136 }
     };
-
-    // 1. Parse URL Parameters on Load
-    window.addEventListener('DOMContentLoaded', () => {
-        const urlParams = new URLSearchParams(window.location.search);
-        
-        if (urlParams.has('prov')) document.getElementById('province').value = urlParams.get('prov');
-        if (urlParams.has('kids')) document.getElementById('children').value = urlParams.get('kids');
-        if (urlParams.has('inc')) document.getElementById('income').value = urlParams.get('inc');
-        
-        calculate(false); // Evaluate initial load state without bloating historical browser stack
+    const currencyFormatter = new Intl.NumberFormat('en-CA', {
+        style: 'currency',
+        currency: 'CAD'
     });
 
-    // 2. Process math engine and write states back to URL structure
-    function calculate(updateURL = true) {
-        const province = document.getElementById('province').value;
-        const childrenCount = parseInt(document.getElementById('children').value) || 1;
-        const income = Math.max(0, parseFloat(document.getElementById('income').value) || 0);
-        
-        // Dynamic formula calculation logic simulating step tables
-        const geoFactors = provincialBaseRates[province] || provincialBaseRates['ON'];
-        let monthlyBase = childrenCount > 1 ? geoFactors.base2 : geoFactors.base1;
-        let scaleRate = childrenCount > 1 ? geoFactors.rate2 : geoFactors.rate1;
-        
-        // Compound multiplier framework per added minor child
-        let structuralMultiplier = 1.0;
-        if (childrenCount === 3) structuralMultiplier = 1.35;
-        if (childrenCount === 4) structuralMultiplier = 1.60;
+    function numberValue(id) {
+        return Math.max(0, parseFloat(document.getElementById(id).value) || 0);
+    }
 
-        let totalMonthlySupport = 0;
-        if (income > 12000) {
-            totalMonthlySupport = (monthlyBase + ((income - 12000) * scaleRate)) * structuralMultiplier;
+    function estimateChildSupport(province, childrenCount, income) {
+        const geoFactors = provincialBaseRates[province] || provincialBaseRates.ON;
+        const monthlyBase = childrenCount > 1 ? geoFactors.base2 : geoFactors.base1;
+        const scaleRate = childrenCount > 1 ? geoFactors.rate2 : geoFactors.rate1;
+        const structuralMultiplier = childrenCount === 3 ? 1.35 : childrenCount === 4 ? 1.60 : 1;
+        return income > 12000
+            ? (monthlyBase + ((income - 12000) * scaleRate)) * structuralMultiplier
+            : 0;
+    }
+
+    function estimateSpousalSupport(payorIncome, recipientIncome, relationshipYears, recipientAge, childSupportAmount = null) {
+        const incomeDifference = Math.max(0, payorIncome - recipientIncome);
+        const durationIsIndefinite = relationshipYears >= 20 ||
+            (relationshipYears >= 5 && recipientAge + relationshipYears >= 65);
+        if (childSupportAmount === null) {
+            return {
+                low: incomeDifference * Math.min(0.015 * relationshipYears, 0.5) / 12,
+                high: incomeDifference * Math.min(0.02 * relationshipYears, 0.5) / 12,
+                detail: durationIsIndefinite
+                    ? 'Indefinite duration under the guideline tests (not a fixed end date).'
+                    : `Estimated duration: ${(relationshipYears * 0.5).toFixed(1)}–${relationshipYears.toFixed(1)} years.`
+            };
         }
 
-        // Render localized currency presentation
-        document.getElementById('output').innerText = new Intl.NumberFormat('en-CA', {
-            style: 'currency',
-            currency: 'CAD'
-        }).format(totalMonthlySupport);
+        const payorNetIncome = payorIncome * 0.75 / 12;
+        const recipientNetIncome = recipientIncome * 0.75 / 12;
+        const payorDisposableIncome = payorNetIncome - childSupportAmount;
+        const recipientDisposableIncome = recipientNetIncome + childSupportAmount;
+        const combinedDisposableIncome = payorDisposableIncome + recipientDisposableIncome;
+        return {
+            low: Math.max(0, combinedDisposableIncome * 0.40 - recipientDisposableIncome),
+            high: Math.max(0, combinedDisposableIncome * 0.46 - recipientDisposableIncome),
+            detail: 'Approximate 40%–46% recipient share of disposable income after child support, using a rough 25% deduction from each annual gross income. Duration is not estimated in this scenario.'
+        };
+    }
 
-        // Update the browser URL without forcing a screen refresh
+    function renderRange(elementId, low, high) {
+        document.getElementById(elementId).innerText =
+            `${currencyFormatter.format(low)}–${currencyFormatter.format(high)} per month`;
+    }
+
+    function calculate(updateURL = true) {
+        const payorIncome = numberValue('payorIncome');
+        const recipientIncome = numberValue('recipientIncome');
+        const relationshipYears = numberValue('relationshipYears');
+        const recipientAge = numberValue('recipientAge');
+        const childrenCount = parseInt(document.getElementById('children').value, 10) || 1;
+        const childSupport = estimateChildSupport(
+            document.getElementById('province').value,
+            childrenCount,
+            payorIncome
+        );
+        const isValidPayor = payorIncome >= recipientIncome;
+
+        document.getElementById('childResult').innerText =
+            `${currencyFormatter.format(childSupport)} per month`;
+        document.getElementById('childDetail').innerText =
+            `Illustrative amount using the selected province, ${childrenCount === 4 ? '4+' : childrenCount} child${childrenCount === 1 ? '' : 'ren'}, and the higher-income spouse's gross income.`;
+
+        if (!isValidPayor) {
+            renderRange('spousalResult', 0, 0);
+            renderRange('combinedResult', 0, 0);
+            document.getElementById('spousalDetail').innerText =
+                'The higher-income spouse is assumed to be the support payor. Check the income entries.';
+            document.getElementById('combinedDetail').innerText =
+                'The higher-income spouse is assumed to be the support payor. Check the income entries.';
+        } else {
+            const spousalOnly = estimateSpousalSupport(
+                payorIncome,
+                recipientIncome,
+                relationshipYears,
+                recipientAge
+            );
+            const spousalWithChildren = estimateSpousalSupport(
+                payorIncome,
+                recipientIncome,
+                relationshipYears,
+                recipientAge,
+                childSupport
+            );
+            renderRange('spousalResult', spousalOnly.low, spousalOnly.high);
+            document.getElementById('spousalDetail').innerText =
+                `${spousalOnly.detail} Amount uses 1.5%–2% of the gross-income difference per relationship year, capped at 50%.`;
+            renderRange('combinedResult', childSupport + spousalWithChildren.low, childSupport + spousalWithChildren.high);
+            document.getElementById('combinedDetail').innerText =
+                `Includes child support of ${currencyFormatter.format(childSupport)} and spousal support of ${currencyFormatter.format(spousalWithChildren.low)}–${currencyFormatter.format(spousalWithChildren.high)} per month. ${spousalWithChildren.detail}`;
+        }
+
         if (updateURL) {
             const params = new URLSearchParams();
-            params.set('prov', province);
-            params.set('kids', childrenCount);
-            params.set('inc', income);
-            
-            const dynamicRoute = `${window.location.pathname}?${params.toString()}`;
-            window.history.replaceState({}, '', dynamicRoute);
+            for (const id of ['payorIncome', 'recipientIncome', 'relationshipYears', 'province', 'children', 'recipientAge']) {
+                params.set(id, document.getElementById(id).value);
+            }
+            window.history.replaceState({}, '', `${window.location.pathname}?${params.toString()}`);
         }
     }
+
+    window.addEventListener('DOMContentLoaded', () => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const legacyInputs = {
+            payorIncome: ['combinedPayorIncome', 'spousalPayorIncome', 'income', 'inc'],
+            recipientIncome: ['combinedRecipientIncome', 'spousalRecipientIncome'],
+            relationshipYears: ['combinedRelationshipYears', 'relationshipYears'],
+            province: ['combinedProvince', 'province', 'prov'],
+            children: ['combinedChildren', 'children', 'kids'],
+            recipientAge: ['recipientAge']
+        };
+        for (const [id, legacyKeys] of Object.entries(legacyInputs)) {
+            const key = [id, ...legacyKeys].find(candidate => urlParams.has(candidate));
+            if (key) document.getElementById(id).value = urlParams.get(key);
+        }
+        calculate(false);
+    });
 </script>
 </body>
 </html>
