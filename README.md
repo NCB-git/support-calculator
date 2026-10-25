@@ -10,21 +10,21 @@ The calculator is published on GitHub Pages:
 
 ## Use
 
-Enter the family's shared information once. Province, number of children, and age at separation are in the collapsed **Advanced inputs** section. All three estimates appear together in the **Compare support scenarios** accordion. Inputs are reflected in the page URL, so the family details can be shared by copying the URL.
+Enter the father's and mother's annual gross incomes, relationship duration, and number of children once. Province, primary residence, and age at separation are in the collapsed **Advanced inputs** section. Estimates appear together in the **Compare support scenarios** accordion. Spousal support only is shown when there are no children. Family inputs stay on the page and are not added to the URL.
 
 ### Child support
 
-Enter the payor's province or territory, number of children, and annual gross income. The monthly estimate updates automatically. This simplified estimate does not use official child support tables.
+Enter the father's and mother's annual gross incomes, then select the number of children (choose **No children** for a child-free family). In **Advanced inputs**, select where the children primarily live. For a sole residence, the estimate uses the non-resident parent's income. For shared parenting, it estimates both table amounts and uses a simplified set-off. Shared parenting generally means each parent has at least 40% of parenting time. These are rough estimates and do not use official child support tables.
 
 ### Spousal support
 
-Enter the higher- and lower-income spouses' annual gross incomes and relationship duration. The spousal-only mode also asks for the lower-income spouse's age at separation, used only for the Rule of 65 duration test; age does not affect the estimated amount. Combined mode does not estimate duration.
+Enter the father's and mother's annual gross incomes and relationship duration. The estimate assumes the higher-income spouse is the spousal-support payor. The **Advanced inputs** section asks for the lower-income spouse's age at separation, used only for the Rule of 65 duration test; age does not affect the estimated amount. Spousal support only is shown only when **No children** is selected.
 
-The spousal-only estimate illustrates the Spousal Support Advisory Guidelines' basic amount and duration ranges: 1.5%–2% of the gross-income difference per relationship year, capped at 50%, and 0.5–1 year of duration per relationship year. It flags indefinite duration under the 20-year relationship or Rule of 65 tests (the Rule of 65 also requires at least five years together). The combined estimate calculates child support using the higher-income spouse's income and estimates spousal support using a 40%–46% recipient share of disposable income after child support. The combined result shows both estimated amounts and their total range; duration is not estimated in this scenario. All scenarios assume the higher-income spouse pays support.
+The spousal-only estimate illustrates the Spousal Support Advisory Guidelines' basic amount and duration ranges: 1.5%–2% of the gross-income difference per relationship year, capped at 50%, and 0.5–1 year of duration per relationship year. It flags indefinite duration under the 20-year relationship or Rule of 65 tests (the Rule of 65 also requires at least five years together). The combined estimate shows net support after combining the estimated child- and spousal-support transfers. Positive combined amounts indicate a net transfer from the higher-income parent to the lower-income parent; negative amounts indicate the reverse. With no children, the combined spousal estimate uses the no-child formula.
 
 ## Important disclaimer
 
-This calculator is for general information and demonstration purposes only. It does not use official child support tables, determine entitlement to spousal support, or account for all Spousal Support Advisory Guidelines adjustments. The combined mode estimates each spouse's monthly net income using a rough 25% deduction from annual gross income; this is not a tax calculation and does not model individual taxes, benefits, or other adjustments. Actual support may differ based on applicable laws and individual circumstances. Check official resources and consult a qualified family law professional for advice about a specific situation.
+This calculator is for general information and demonstration purposes only. It does not use official child support tables, determine entitlement to spousal support, or account for all Spousal Support Advisory Guidelines adjustments. Shared parenting uses a simplified set-off and the combined estimate approximates each spouse's monthly net income using a rough 25% deduction from annual gross income; this is not a tax calculation and does not model individual taxes, benefits, or other adjustments. Actual support may differ based on applicable laws and individual circumstances. Check official resources and consult a qualified family law professional for advice about a specific situation.
 
 ## Run locally
 
