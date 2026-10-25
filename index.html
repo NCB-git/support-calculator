@@ -54,13 +54,25 @@
         .hero-art { width: 205px; min-width: 155px; height: auto; filter: drop-shadow(0 10px 12px rgba(91, 83, 145, .12)); }
         h2 { margin: 0; color: var(--primary-dark); font-size: 1.18rem; letter-spacing: -.02em; }
         p { line-height: 1.5; }
-        .input-grid, .scenario-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 16px; }
-        .input-group { margin-bottom: 16px; }
-        label { display: block; margin-bottom: 6px; font-weight: 600; font-size: 0.95rem; }
+        .input-grid, .scenario-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+        .input-group { margin: 0; }
+        label { display: flex; align-items: center; min-height: 2.5rem; margin-bottom: 6px; font-weight: 600; font-size: 0.95rem; line-height: 1.3; }
         .label-content, .scenario-title { display: inline-flex; align-items: center; gap: 8px; }
-        .family-icon { width: 1.4rem; height: 1.4rem; flex: 0 0 auto; color: var(--primary); padding: 4px; box-sizing: content-box; border-radius: 10px; background: var(--lavender); }
+        .label-content { min-height: 2.5rem; }
+        .family-icon { width: 1.5rem; height: 1.5rem; flex: 0 0 auto; color: var(--primary); padding: 5px; box-sizing: content-box; border-radius: 12px; background: var(--lavender); }
+        .input-card { display: flex; align-items: center; gap: 15px; min-width: 0; min-height: 104px; padding: 14px; border: 1px solid var(--border); border-radius: 17px; background: linear-gradient(135deg, #fff, #faf9ff); box-shadow: 0 5px 16px rgba(58, 55, 111, .045); }
+        .parent-income-card { min-height: 112px; }
+        .field-card-icon { width: 58px; height: 58px; flex: 0 0 58px; padding: 11px; box-sizing: border-box; border-radius: 19px; color: var(--primary); background: var(--lavender); }
+        .parent-income-icon { width: 68px; height: 68px; flex-basis: 68px; padding: 8px; border-radius: 21px; }
+        .parent-income-icon.father { color: #3e69a9; background: #eaf1ff; }
+        .parent-income-icon.mother { color: #a34e7d; background: #fff0f5; }
+        .input-card-content { flex: 1; min-width: 0; }
+        .input-card-content label { min-height: 0; margin: 0 0 7px; font-size: .88rem; }
+        .input-card-content input, .input-card-content select { height: 40px; padding: 7px 10px; border-radius: 10px; }
+        .input-card-content small { margin-top: 5px; font-size: .74rem; }
+        .shared-note { grid-column: 1 / -1; margin: 0 0 2px; padding: 10px 13px; border-radius: 12px; background: var(--mint); color: #386c57; font-size: .84rem; }
         .scenario-icon { width: 1.35rem; height: 1.35rem; padding: 7px; box-sizing: content-box; color: var(--primary); background: #fff; border-radius: 13px; box-shadow: 0 3px 10px rgba(51, 48, 100, .08); }
-        input, select { width: 100%; padding: 12px 13px; box-sizing: border-box; border: 1px solid var(--border); border-radius: 12px; background: #fff; color: var(--text); font: inherit; transition: border-color .18s ease, box-shadow .18s ease; }
+        input, select { width: 100%; height: 44px; padding: 9px 12px; box-sizing: border-box; border: 1px solid var(--border); border-radius: 12px; background: #fff; color: var(--text); font: inherit; transition: border-color .18s ease, box-shadow .18s ease; }
         input:hover, select:hover { border-color: #b9b6dc; }
         input:focus, select:focus, summary:focus-visible { outline: 3px solid rgba(104, 101, 190, .2); border-color: var(--primary); }
         small { display: block; margin-top: 6px; color: #666783; line-height: 1.4; }
@@ -86,10 +98,15 @@
             .hero { min-height: 155px; margin: -20px -20px 22px; padding: 23px 22px; }
             .hero-art { width: 130px; min-width: 110px; margin-right: -8px; }
             .input-grid, .scenario-grid { grid-template-columns: 1fr; }
+            .parent-income-card { min-height: 100px; }
         }
         @media (max-width: 380px) {
             .hero-art { width: 96px; min-width: 90px; }
             .scenario-icon { width: 1.1rem; height: 1.1rem; padding: 5px; }
+            label, .label-content { min-height: 2.75rem; }
+            .input-card { gap: 11px; min-height: 92px; padding: 11px; }
+            .field-card-icon { width: 50px; height: 50px; flex-basis: 50px; padding: 9px; border-radius: 16px; }
+            .parent-income-icon { width: 56px; height: 56px; flex-basis: 56px; padding: 7px; border-radius: 18px; }
         }
         @media (prefers-reduced-motion: reduce) {
             *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; }
@@ -100,16 +117,37 @@
 <main class="calculator-card">
     <svg aria-hidden="true" class="icon-library" width="0" height="0" style="position:absolute">
         <symbol id="father-icon" viewBox="0 0 24 24">
-            <circle cx="12" cy="7" r="3.5" fill="none" stroke="currentColor" stroke-width="1.8"/>
-            <path d="M5 21v-2a7 7 0 0 1 14 0v2M16.5 3.5 20 0m0 0v3m0-3h-3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+            <path d="M6 8c-.7-4.5 1.8-7 6-7s6.7 2.5 6 7l-1.3 2H7.3L6 8Z" fill="currentColor"/>
+            <circle cx="12" cy="9" r="4.4" fill="#fff" stroke="currentColor" stroke-width="1.2"/>
+            <path d="M3 23c.4-5.7 3.4-8.5 9-8.5s8.6 2.8 9 8.5H3Z" fill="currentColor"/>
+            <circle cx="18.2" cy="17.8" r="4.7" fill="#fff" stroke="currentColor" stroke-width="1.2"/>
+            <path d="M18.2 15v4.5m-1.7-1.5 1.7 1.5 1.6-1.5M20.7 20.8l2.2 2.2" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
         </symbol>
         <symbol id="mother-icon" viewBox="0 0 24 24">
-            <circle cx="12" cy="7" r="3.5" fill="none" stroke="currentColor" stroke-width="1.8"/>
-            <path d="M5 21v-2a7 7 0 0 1 14 0v2M12 14v7m-3-3h6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+            <path d="M5 9c0-5 2.7-8 7-8s7 3 7 8l-1.8 6H6.8L5 9Z" fill="currentColor"/>
+            <circle cx="12" cy="9" r="4.2" fill="#fff" stroke="currentColor" stroke-width="1.2"/>
+            <path d="M3 23c.4-5.7 3.4-8.5 9-8.5s8.6 2.8 9 8.5H3Z" fill="currentColor"/>
+            <circle cx="18.2" cy="17.8" r="4.7" fill="#fff" stroke="currentColor" stroke-width="1.2"/>
+            <circle cx="18.2" cy="16.2" r="1.3" fill="none" stroke="currentColor" stroke-width="1.2"/>
+            <path d="M18.2 17.5v3m-1.7-1.5h3.4" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
         </symbol>
         <symbol id="child-icon" viewBox="0 0 24 24">
             <circle cx="12" cy="6" r="2.7" fill="none" stroke="currentColor" stroke-width="1.8"/>
             <path d="m8.5 11 3.5-1 3.5 1 1.5 5-3-1v6m-4 0v-6l-3 1 1.5-5ZM8 4 6.5 2.5M16 4l1.5-1.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </symbol>
+        <symbol id="calendar-icon" viewBox="0 0 24 24">
+            <rect x="3" y="5" width="18" height="16" rx="3" fill="none" stroke="currentColor" stroke-width="1.8"/>
+            <path d="M7 3v4m10-4v4M3 10h18m-13 4h2m4 0h2m-8 3h2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+        </symbol>
+        <symbol id="home-icon" viewBox="0 0 24 24">
+            <path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-6v-7h-4v7H4a1 1 0 0 1-1-1V10Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+        </symbol>
+        <symbol id="pin-icon" viewBox="0 0 24 24">
+            <path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0Z" fill="none" stroke="currentColor" stroke-width="1.8"/>
+            <circle cx="12" cy="10" r="2.5" fill="none" stroke="currentColor" stroke-width="1.8"/>
+        </symbol>
+        <symbol id="cake-icon" viewBox="0 0 24 24">
+            <path d="M4 12h16v9H4zM3 12c0-2 2-3 4-3s4 1 5 3c1-2 3-3 5-3s4 1 4 3M8 4v3m8-3v3m-8-4a1 1 0 1 0 0 2m8-2a1 1 0 1 0 0 2M4 17h16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
         </symbol>
     </svg>
 
@@ -140,60 +178,81 @@
     <section aria-labelledby="familyDetailsHeading">
         <h2 id="familyDetailsHeading">Family details</h2>
         <div class="input-grid">
-            <div class="input-group">
-                <label for="fatherIncome"><span class="label-content"><svg class="family-icon"><use href="#father-icon"></use></svg>Father's annual gross income ($):</span></label>
-                <input type="number" id="fatherIncome" value="40000" min="0" step="1000" oninput="calculate()">
+            <div class="input-card parent-income-card">
+                <svg class="parent-income-icon father" aria-hidden="true"><use href="#father-icon"></use></svg>
+                <div class="input-card-content">
+                    <label for="fatherIncome">Father's annual gross income ($)</label>
+                    <input type="number" id="fatherIncome" value="40000" min="0" step="1000" oninput="calculate()">
+                </div>
             </div>
-            <div class="input-group">
-                <label for="motherIncome"><span class="label-content"><svg class="family-icon"><use href="#mother-icon"></use></svg>Mother's annual gross income ($):</span></label>
-                <input type="number" id="motherIncome" value="80000" min="0" step="1000" oninput="calculate()">
+            <div class="input-card parent-income-card">
+                <svg class="parent-income-icon mother" aria-hidden="true"><use href="#mother-icon"></use></svg>
+                <div class="input-card-content">
+                    <label for="motherIncome">Mother's annual gross income ($)</label>
+                    <input type="number" id="motherIncome" value="80000" min="0" step="1000" oninput="calculate()">
+                </div>
             </div>
-            <div class="input-group">
-                <label for="relationshipYears">Years of marriage or cohabitation:</label>
-                <input type="number" id="relationshipYears" value="10" min="0" max="80" step="0.5" oninput="calculate()">
+            <div class="input-card">
+                <svg class="field-card-icon" aria-hidden="true"><use href="#calendar-icon"></use></svg>
+                <div class="input-card-content">
+                    <label for="relationshipYears">Years of marriage or cohabitation</label>
+                    <input type="number" id="relationshipYears" value="10" min="0" max="80" step="0.5" oninput="calculate()">
+                </div>
             </div>
-            <div class="input-group">
-                <label for="children"><span class="label-content"><svg class="family-icon"><use href="#child-icon"></use></svg>Number of children:</span></label>
-                <select id="children" onchange="calculate()">
-                    <option value="0">No children</option>
-                    <option value="1" selected>1 child</option>
-                    <option value="2">2 children</option>
-                    <option value="3">3 children</option>
-                    <option value="4">4+ children</option>
-                </select>
+            <div class="input-card">
+                <svg class="field-card-icon" aria-hidden="true"><use href="#child-icon"></use></svg>
+                <div class="input-card-content">
+                    <label for="children">Number of children</label>
+                    <select id="children" onchange="calculate()">
+                        <option value="0">No children</option>
+                        <option value="1" selected>1 child</option>
+                        <option value="2">2 children</option>
+                        <option value="3">3 children</option>
+                        <option value="4">4+ children</option>
+                    </select>
+                </div>
             </div>
         </div>
         <details>
             <summary>Advanced inputs</summary>
             <div class="input-grid">
-                <div class="input-group">
-                    <label for="province">Province or territory:</label>
-                    <select id="province" onchange="calculate()">
-                        <option value="ON">Ontario (ON)</option>
-                        <option value="BC">British Columbia (BC)</option>
-                        <option value="AB">Alberta (AB)</option>
-                        <option value="QC">Quebec (QC)</option>
-                        <option value="NS">Nova Scotia (NS)</option>
-                        <option value="NB">New Brunswick (NB)</option>
-                        <option value="MB">Manitoba (MB)</option>
-                        <option value="PE">Prince Edward Island (PEI)</option>
-                        <option value="SK">Saskatchewan (SK)</option>
-                        <option value="NL">Newfoundland &amp; Labrador (NL)</option>
-                    </select>
+                <div class="input-card">
+                    <svg class="field-card-icon" aria-hidden="true"><use href="#pin-icon"></use></svg>
+                    <div class="input-card-content">
+                        <label for="province">Province or territory</label>
+                        <select id="province" onchange="calculate()">
+                            <option value="ON">Ontario (ON)</option>
+                            <option value="BC">British Columbia (BC)</option>
+                            <option value="AB">Alberta (AB)</option>
+                            <option value="QC">Quebec (QC)</option>
+                            <option value="NS">Nova Scotia (NS)</option>
+                            <option value="NB">New Brunswick (NB)</option>
+                            <option value="MB">Manitoba (MB)</option>
+                            <option value="PE">Prince Edward Island (PEI)</option>
+                            <option value="SK">Saskatchewan (SK)</option>
+                            <option value="NL">Newfoundland &amp; Labrador (NL)</option>
+                        </select>
+                    </div>
                 </div>
-                <div class="input-group">
-                    <label for="childResidence">Where do the children primarily live?</label>
-                    <select id="childResidence" onchange="calculate()">
-                        <option value="mother">Mother</option>
-                        <option value="father">Father</option>
-                        <option value="shared">Shared</option>
-                    </select>
+                <div class="input-card">
+                    <svg class="field-card-icon" aria-hidden="true"><use href="#home-icon"></use></svg>
+                    <div class="input-card-content">
+                        <label for="childResidence">Where do the children primarily live?</label>
+                        <select id="childResidence" onchange="calculate()">
+                            <option value="mother">Mother</option>
+                            <option value="father">Father</option>
+                            <option value="shared">Shared</option>
+                        </select>
+                    </div>
                 </div>
-                <p id="sharedParentingNote" hidden>Shared parenting generally means each parent has at least 40% of the parenting time.</p>
-                <div class="input-group">
-                    <label for="recipientAge">Lower-income spouse's age at separation:</label>
-                    <input type="number" id="recipientAge" value="40" min="18" max="100" step="1" oninput="calculate()">
-                    <small>Used only for the Rule of 65 duration test in the spousal-only estimate.</small>
+                <p id="sharedParentingNote" class="shared-note" hidden>Shared parenting generally means each parent has at least 40% of the parenting time.</p>
+                <div class="input-card">
+                    <svg class="field-card-icon" aria-hidden="true"><use href="#cake-icon"></use></svg>
+                    <div class="input-card-content">
+                        <label for="recipientAge">Lower-income spouse's age at separation</label>
+                        <input type="number" id="recipientAge" value="40" min="18" max="100" step="1" oninput="calculate()">
+                        <small>Used only for the Rule of 65 duration test.</small>
+                    </div>
                 </div>
             </div>
         </details>
