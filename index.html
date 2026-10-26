@@ -287,12 +287,12 @@
             </article>
             <article class="scenario-card scenario-spousal" id="spousalOnlyScenario">
                 <h3 class="scenario-title"><svg class="scenario-icon" aria-hidden="true"><use href="#mother-icon"></use></svg><svg class="scenario-icon" aria-hidden="true"><use href="#father-icon"></use></svg>Spousal support only</h3>
-                <div class="scenario-value" id="spousalResult">$0.00–$0.00 per month</div>
+                <div class="scenario-value" id="spousalResult">$0.00 / $0.00 / $0.00 per month (low/medium/high)</div>
                 <p class="scenario-detail" id="spousalDetail"></p>
             </article>
             <article class="scenario-card scenario-combined">
                 <h3 class="scenario-title"><svg class="scenario-icon" aria-hidden="true"><use href="#father-icon"></use></svg><svg class="scenario-icon" aria-hidden="true"><use href="#mother-icon"></use></svg><svg class="scenario-icon" aria-hidden="true"><use href="#child-icon"></use></svg>Combined net support</h3>
-                <div class="scenario-value" id="combinedResult">$0.00–$0.00 per month</div>
+                <div class="scenario-value" id="combinedResult">$0.00 / $0.00 / $0.00 per month (low/medium/high)</div>
                 <p class="scenario-detail" id="combinedDetail"></p>
             </article>
         </div>
@@ -342,9 +342,12 @@
             (relationshipYears >= 5 && recipientAge + relationshipYears >= 65);
 
         if (childSupportFlow === null) {
+            const low = incomeDifference * Math.min(0.015 * relationshipYears, 0.5) / 12;
+            const high = incomeDifference * Math.min(0.02 * relationshipYears, 0.5) / 12;
             return {
-                low: incomeDifference * Math.min(0.015 * relationshipYears, 0.5) / 12,
-                high: incomeDifference * Math.min(0.02 * relationshipYears, 0.5) / 12,
+                low,
+                medium: (low + high) / 2,
+                high,
                 detail: durationIsIndefinite
                     ? 'Indefinite duration under the guideline tests (not a fixed end date).'
                     : `Estimated duration: ${(relationshipYears * 0.5).toFixed(1)}–${relationshipYears.toFixed(1)} years.`
@@ -356,9 +359,12 @@
         const payorDisposableIncome = payorNetIncome - childSupportFlow;
         const recipientDisposableIncome = recipientNetIncome + childSupportFlow;
         const combinedDisposableIncome = payorDisposableIncome + recipientDisposableIncome;
+        const low = Math.max(0, combinedDisposableIncome * 0.40 - recipientDisposableIncome);
+        const high = Math.max(0, combinedDisposableIncome * 0.46 - recipientDisposableIncome);
         return {
-            low: Math.max(0, combinedDisposableIncome * 0.40 - recipientDisposableIncome),
-            high: Math.max(0, combinedDisposableIncome * 0.46 - recipientDisposableIncome),
+            low,
+            medium: (low + high) / 2,
+            high,
             detail: 'Approximate 40%–46% recipient share of disposable income after child support, using a rough 25% deduction from each annual gross income. Duration is not estimated in this scenario.'
         };
     }
@@ -404,9 +410,9 @@
         };
     }
 
-    function renderRange(elementId, low, high) {
+    function renderRange(elementId, low, medium, high) {
         document.getElementById(elementId).innerText =
-            `${currencyFormatter.format(low)}–${currencyFormatter.format(high)} per month`;
+            `${currencyFormatter.format(low)} / ${currencyFormatter.format(medium)} / ${currencyFormatter.format(high)} per month (low/medium/high)`;
     }
 
     function calculate() {
@@ -455,15 +461,16 @@
             recipientAge,
             childrenCount === 0 ? null : childSupportFlow.signedFromHigherIncome
         );
-        renderRange('spousalResult', spousalOnly.low, spousalOnly.high);
+        renderRange('spousalResult', spousalOnly.low, spousalOnly.medium, spousalOnly.high);
         document.getElementById('spousalDetail').innerText =
-            `${spousalOnly.detail} Amount uses 1.5%–2% of the gross-income difference per relationship year, capped at 50%.`;
+            `${spousalOnly.detail} Amount uses 1.5%–2% of the gross-income difference per relationship year, capped at 50%, and reports low/medium/high values.`;
 
         const netLow = spousalWithChildren.low + childSupportFlow.signedFromHigherIncome;
+        const netMedium = spousalWithChildren.medium + childSupportFlow.signedFromHigherIncome;
         const netHigh = spousalWithChildren.high + childSupportFlow.signedFromHigherIncome;
-        renderRange('combinedResult', netLow, netHigh);
+        renderRange('combinedResult', netLow, netMedium, netHigh);
         document.getElementById('combinedDetail').innerText =
-            `Child-support estimate: ${currencyFormatter.format(childSupport)} (${childSupportFlow.from ? `${childSupportFlow.from} to ${childSupportFlow.to}` : 'no child-support transfer'}). Spousal-support estimate: ${currencyFormatter.format(spousalWithChildren.low)}–${currencyFormatter.format(spousalWithChildren.high)} from the ${higherIncomeParent} to the ${lowerIncomeParent}. Positive combined figures mean net support flows from the higher-income parent to the lower-income parent; negative figures mean it flows the other way. ${spousalWithChildren.detail}`;
+            `Child-support estimate: ${currencyFormatter.format(childSupport)} (${childSupportFlow.from ? `${childSupportFlow.from} to ${childSupportFlow.to}` : 'no child-support transfer'}). Spousal-support estimate: ${currencyFormatter.format(spousalWithChildren.low)} / ${currencyFormatter.format(spousalWithChildren.medium)} / ${currencyFormatter.format(spousalWithChildren.high)} (low/medium/high) from the ${higherIncomeParent} to the ${lowerIncomeParent}. Positive combined figures mean net support flows from the higher-income parent to the lower-income parent; negative figures mean it flows the other way. ${spousalWithChildren.detail}`;
 
     }
 
