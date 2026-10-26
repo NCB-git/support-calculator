@@ -6,52 +6,59 @@
     <title>Canadian Child and Spousal Support Calculator</title>
     <style>
         :root {
-            --primary: #5254a8;
-            --primary-dark: #393b83;
-            --bg: #f8f7ff;
-            --text: #30324a;
-            --border: #e4e2ef;
-            --mint: #e8f7f1;
-            --peach: #fff0e7;
-            --lavender: #efedff;
+            --primary: #22786e;
+            --primary-dark: #153e43;
+            --bg: #f4f3ef;
+            --text: #25363a;
+            --border: #e5e5df;
+            --mint: #eaf4ef;
+            --peach: #f8eee5;
+            --lavender: #edf1f2;
+            --gold: #d8b675;
         }
         body {
             font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            max-width: 820px;
-            margin: 32px auto;
-            padding: 20px;
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 24px;
             background:
-                radial-gradient(ellipse at 6% 4%, #e8e7ff 0, transparent 28rem),
-                radial-gradient(ellipse at 96% 30%, #e6f7ef 0, transparent 25rem),
+                radial-gradient(ellipse at 2% 5%, #e7eee9 0, transparent 30rem),
+                radial-gradient(ellipse at 100% 18%, #eee8dc 0, transparent 28rem),
                 var(--bg);
             color: var(--text);
         }
         .calculator-card {
             position: relative;
             overflow: hidden;
-            background: rgba(255,255,255,.94);
-            padding: 30px;
-            border-radius: 24px;
-            box-shadow: 0 20px 60px rgba(68, 66, 124, .12);
-            border: 1px solid rgba(255,255,255,.9);
+            background: #fffefa;
+            padding: 34px;
+            border-radius: 26px;
+            box-shadow: 0 28px 80px rgba(32, 53, 49, .13), 0 3px 12px rgba(32, 53, 49, .04);
+            border: 1px solid rgba(255,255,255,.96);
         }
         .hero {
             position: relative;
-            display: flex;
+            display: grid;
+            grid-template-columns: 112px minmax(0, 1fr) 112px;
             align-items: center;
-            justify-content: space-between;
-            gap: 24px;
+            gap: 18px;
             min-height: 190px;
-            margin: -30px -30px 28px;
-            padding: 28px 34px;
+            margin: -34px -34px 32px;
+            padding: 26px 36px;
             overflow: hidden;
-            background: linear-gradient(125deg, #efedff, #effaf5 65%, #fff4ec);
+            color: #fff;
+            background:
+                radial-gradient(ellipse at 52% -60%, rgba(103, 170, 148, .35), transparent 68%),
+                linear-gradient(120deg, #173b40, #183e44 55%, #243e46);
         }
-        .hero-copy { position: relative; z-index: 1; max-width: 470px; }
-        .eyebrow { margin: 0 0 8px; color: var(--primary); font-size: .78rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
-        h1 { margin: 0; color: var(--primary-dark); font-size: clamp(1.8rem, 5vw, 2.5rem); letter-spacing: -.04em; line-height: 1.08; }
-        .hero-copy > p:last-child { margin: 12px 0 0; color: #5d5d78; line-height: 1.5; }
-        .hero-art { width: 205px; min-width: 155px; height: auto; filter: drop-shadow(0 10px 12px rgba(91, 83, 145, .12)); }
+        .hero::after { position: absolute; right: -62px; bottom: -142px; width: 300px; height: 300px; border: 1px solid rgba(216, 182, 117, .2); border-radius: 50%; content: ""; box-shadow: 0 0 0 24px rgba(216, 182, 117, .035), 0 0 0 48px rgba(216, 182, 117, .025); }
+        .hero-brand { display: grid; place-items: center; width: 104px; height: 104px; border: 1px solid rgba(216, 182, 117, .75); border-radius: 30px; background: linear-gradient(145deg, rgba(255,255,255,.16), rgba(255,255,255,.06)); box-shadow: inset 0 1px rgba(255,255,255,.16), 0 10px 28px rgba(8, 29, 31, .2); }
+        .hero-copy { position: relative; z-index: 1; max-width: 560px; justify-self: center; text-align: center; }
+        .eyebrow { margin: 0 0 9px; color: #ddc58f; font-size: .72rem; font-weight: 800; letter-spacing: .18em; text-transform: uppercase; }
+        h1 { margin: 0; color: #fffdf7; font-family: Georgia, "Times New Roman", serif; font-size: clamp(2rem, 5vw, 2.8rem); font-weight: 600; letter-spacing: -.035em; line-height: 1.08; }
+        .hero-copy > p:last-child { margin: 12px 0 0; color: #d0ddda; font-size: .98rem; line-height: 1.5; }
+        .hero-art { width: 92px; height: auto; filter: drop-shadow(0 5px 6px rgba(0,0,0,.16)); }
+        .hero-balance { width: 112px; height: 1px; }
         h2 { margin: 0; color: var(--primary-dark); font-size: 1.18rem; letter-spacing: -.02em; }
         p { line-height: 1.5; }
         .input-grid, .scenario-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
@@ -60,48 +67,57 @@
         .label-content, .scenario-title { display: inline-flex; align-items: center; gap: 8px; }
         .label-content { min-height: 2.5rem; }
         .family-icon { width: 1.5rem; height: 1.5rem; flex: 0 0 auto; color: var(--primary); padding: 5px; box-sizing: content-box; border-radius: 12px; background: var(--lavender); }
-        .input-card { display: flex; align-items: center; gap: 15px; min-width: 0; min-height: 104px; padding: 14px; border: 1px solid var(--border); border-radius: 17px; background: linear-gradient(135deg, #fff, #faf9ff); box-shadow: 0 5px 16px rgba(58, 55, 111, .045); }
+        .input-card { display: flex; align-items: center; gap: 15px; min-width: 0; min-height: 104px; padding: 14px; border: 1px solid var(--border); border-radius: 17px; background: linear-gradient(135deg, #fffefa, #f8f8f3); box-shadow: 0 5px 16px rgba(32, 53, 49, .045); }
         .parent-income-card { min-height: 112px; }
         .field-card-icon { width: 58px; height: 58px; flex: 0 0 58px; padding: 11px; box-sizing: border-box; border-radius: 19px; color: var(--primary); background: var(--lavender); }
         .parent-income-icon { width: 68px; height: 68px; flex-basis: 68px; padding: 8px; border-radius: 21px; }
-        .parent-income-icon.father { color: #3e69a9; background: #eaf1ff; }
-        .parent-income-icon.mother { color: #a34e7d; background: #fff0f5; }
+        .parent-income-icon.father { color: #386c82; background: #e8f1f2; }
+        .parent-income-icon.mother { color: #a86b56; background: #f8eee7; }
         .input-card-content { flex: 1; min-width: 0; }
         .input-card-content label { min-height: 0; margin: 0 0 7px; font-size: .88rem; }
         .input-card-content input, .input-card-content select { height: 40px; padding: 7px 10px; border-radius: 10px; }
         .input-card-content small { margin-top: 5px; font-size: .74rem; }
         .shared-note { grid-column: 1 / -1; margin: 0 0 2px; padding: 10px 13px; border-radius: 12px; background: var(--mint); color: #386c57; font-size: .84rem; }
-        .scenario-icon { width: 1.35rem; height: 1.35rem; padding: 7px; box-sizing: content-box; color: var(--primary); background: #fff; border-radius: 13px; box-shadow: 0 3px 10px rgba(51, 48, 100, .08); }
+        .scenario-icon { width: 1.35rem; height: 1.35rem; padding: 7px; box-sizing: content-box; color: var(--primary); background: #fffefa; border-radius: 13px; box-shadow: 0 3px 10px rgba(32, 53, 49, .08); }
         input, select { width: 100%; height: 44px; padding: 9px 12px; box-sizing: border-box; border: 1px solid var(--border); border-radius: 12px; background: #fff; color: var(--text); font: inherit; transition: border-color .18s ease, box-shadow .18s ease; }
-        input:hover, select:hover { border-color: #b9b6dc; }
-        input:focus, select:focus, summary:focus-visible { outline: 3px solid rgba(104, 101, 190, .2); border-color: var(--primary); }
-        small { display: block; margin-top: 6px; color: #666783; line-height: 1.4; }
+        input:hover, select:hover { border-color: #9cb9ae; }
+        input:focus, select:focus, summary:focus-visible { outline: 3px solid rgba(34, 120, 110, .18); border-color: var(--primary); }
+        small { display: block; margin-top: 6px; color: #657371; line-height: 1.4; }
         details { margin-top: 16px; }
-        details > summary { cursor: pointer; list-style: none; font-weight: 750; color: var(--primary-dark); padding: 13px 16px; border: 1px solid #e7e5f2; border-radius: 13px; background: #faf9ff; }
+        details > summary { cursor: pointer; list-style: none; font-weight: 750; color: var(--primary-dark); padding: 13px 16px; border: 1px solid #e1e5df; border-radius: 13px; background: #f7f8f3; }
         details > summary::-webkit-details-marker { display: none; }
         details > summary::after { content: "+"; float: right; color: var(--primary); font-size: 1.2rem; line-height: 1; }
         details[open] > summary::after { content: "−"; }
         .scenario-grid { margin-top: 14px; gap: 12px; }
-        .scenario-card { padding: 17px; margin-bottom: 0; background: #fff; border: 1px solid var(--border); border-radius: 17px; box-shadow: 0 6px 18px rgba(58, 55, 111, .055); transition: transform .18s ease, box-shadow .18s ease; }
-        .scenario-card:hover { transform: translateY(-2px); box-shadow: 0 10px 24px rgba(58, 55, 111, .1); }
-        .scenario-child { border-top: 4px solid #72c6a6; background: linear-gradient(180deg, var(--mint), #fff 38%); }
-        .scenario-spousal { border-top: 4px solid #f3ad80; background: linear-gradient(180deg, var(--peach), #fff 38%); }
-        .scenario-combined { border-top: 4px solid #9691e5; background: linear-gradient(180deg, var(--lavender), #fff 38%); }
+        .scenario-card { padding: 17px; margin-bottom: 0; background: #fffefa; border: 1px solid var(--border); border-radius: 17px; box-shadow: 0 6px 18px rgba(32, 53, 49, .055); transition: transform .18s ease, box-shadow .18s ease; }
+        .scenario-card:hover { transform: translateY(-2px); box-shadow: 0 10px 24px rgba(32, 53, 49, .1); }
+        .scenario-child { border-top: 4px solid #72b49b; background: linear-gradient(180deg, var(--mint), #fffefa 42%); }
+        .scenario-spousal { border-top: 4px solid #d1a477; background: linear-gradient(180deg, var(--peach), #fffefa 42%); }
+        .scenario-combined { border-top: 4px solid #668b88; background: linear-gradient(180deg, var(--lavender), #fffefa 42%); }
         .scenario-card h3 { margin: 0 0 14px; color: var(--primary-dark); font-size: 1rem; line-height: 1.35; }
         .scenario-title { gap: 7px; }
-        .scenario-value { color: #34366f; font-size: clamp(1.12rem, 3vw, 1.45rem); font-weight: 850; letter-spacing: -.025em; line-height: 1.25; }
-        .scenario-detail { margin: 10px 0 0; color: #62637c; font-size: 0.86rem; line-height: 1.5; overflow-wrap: anywhere; }
-        .disclaimer { padding: 14px 16px; border-radius: 13px; background: #f8f7fc; color: #686980; font-size: 0.79rem; line-height: 1.55; }
+        .scenario-value { color: #174d4d; font-size: clamp(1.12rem, 3vw, 1.45rem); font-weight: 800; letter-spacing: -.025em; line-height: 1.25; }
+        .scenario-detail { margin: 10px 0 0; color: #626f6d; font-size: 0.86rem; line-height: 1.5; overflow-wrap: anywhere; }
+        .disclaimer { padding: 14px 16px; border-radius: 13px; background: #f5f5f0; color: #626f6d; font-size: 0.79rem; line-height: 1.55; }
         @media (max-width: 560px) {
             body { margin: 0 auto; padding: 10px; }
             .calculator-card { padding: 20px; border-radius: 19px; }
-            .hero { min-height: 155px; margin: -20px -20px 22px; padding: 23px 22px; }
-            .hero-art { width: 130px; min-width: 110px; margin-right: -8px; }
+            .hero { grid-template-columns: 72px minmax(0, 1fr) 72px; gap: 9px; min-height: 145px; margin: -20px -20px 24px; padding: 19px 16px; }
+            .hero-brand { width: 68px; height: 68px; border-radius: 21px; }
+            .hero-art { width: 62px; min-width: 0; margin: 0; }
+            .hero-balance { width: 72px; }
+            .eyebrow { font-size: .62rem; letter-spacing: .13em; }
+            .hero-copy > p:last-child { margin-top: 8px; font-size: .83rem; }
             .input-grid, .scenario-grid { grid-template-columns: 1fr; }
             .parent-income-card { min-height: 100px; }
         }
         @media (max-width: 380px) {
-            .hero-art { width: 96px; min-width: 90px; }
+            .hero { grid-template-columns: 56px minmax(0, 1fr) 56px; gap: 6px; padding-inline: 12px; }
+            .hero-brand { width: 54px; height: 54px; border-radius: 17px; }
+            .hero-art { width: 50px; }
+            .hero-balance { width: 56px; }
+            h1 { font-size: 1.75rem; }
+            .hero-copy > p:last-child { font-size: .76rem; }
             .scenario-icon { width: 1.1rem; height: 1.1rem; padding: 5px; }
             label, .label-content { min-height: 2.75rem; }
             .input-card { gap: 11px; min-height: 92px; padding: 11px; }
@@ -152,27 +168,30 @@
     </svg>
 
     <header class="hero">
+        <div class="hero-brand">
+            <svg class="hero-art" viewBox="0 0 220 170" role="img" aria-label="Illustration of a family together">
+                <ellipse cx="111" cy="151" rx="87" ry="10" fill="#c7d7c9"/>
+                <path d="M27 106c15-22 35-25 50-9 14-17 39-18 54 0 18-17 43-10 56 10v39H27z" fill="#b7d8c5"/>
+                <circle cx="64" cy="61" r="20" fill="#f2bd9b"/>
+                <path d="M44 59c2-24 37-30 42-1-8-8-16-12-26-10-4 6-9 10-16 11" fill="#51436c"/>
+                <path d="M38 126c0-29 8-45 27-45s28 16 28 45v14H38z" fill="#668f89"/>
+                <circle cx="154" cy="61" r="20" fill="#e8b58f"/>
+                <path d="M134 59c0-24 38-29 41 0-9-7-17-11-27-10-4 5-9 8-14 10" fill="#51436c"/>
+                <path d="M126 126c0-29 9-45 28-45s28 16 28 45v14h-56z" fill="#c68468"/>
+                <circle cx="109" cy="91" r="15" fill="#f5c99d"/>
+                <path d="M94 91c2-20 31-24 33 0-7-6-12-9-21-8-3 4-7 6-12 8" fill="#705570"/>
+                <path d="M89 143c0-25 6-39 20-39s21 14 21 39v4H89z" fill="#d8b675"/>
+                <path d="m33 34 3 7 8 1-6 5 1 8-6-4-7 4 2-8-6-5 8-1zM190 35l2 5 6 1-5 4 1 6-5-3-5 3 1-6-4-4 6-1z" fill="#d8b675"/>
+                <circle cx="112" cy="27" r="4" fill="#88c9ad"/>
+                <circle cx="205" cy="85" r="3" fill="#a6a1e3"/>
+            </svg>
+        </div>
         <div class="hero-copy">
             <p class="eyebrow">A clearer starting point</p>
             <h1>Support Calculator</h1>
             <p>One family's details. A few helpful support scenarios.</p>
         </div>
-        <svg class="hero-art" viewBox="0 0 220 170" role="img" aria-label="Illustration of a family together">
-            <ellipse cx="111" cy="151" rx="87" ry="10" fill="#dcdaf1"/>
-            <path d="M27 106c15-22 35-25 50-9 14-17 39-18 54 0 18-17 43-10 56 10v39H27z" fill="#dff4e9"/>
-            <circle cx="64" cy="61" r="20" fill="#f2bd9b"/>
-            <path d="M44 59c2-24 37-30 42-1-8-8-16-12-26-10-4 6-9 10-16 11" fill="#51436c"/>
-            <path d="M38 126c0-29 8-45 27-45s28 16 28 45v14H38z" fill="#8d89d9"/>
-            <circle cx="154" cy="61" r="20" fill="#e8b58f"/>
-            <path d="M134 59c0-24 38-29 41 0-9-7-17-11-27-10-4 5-9 8-14 10" fill="#51436c"/>
-            <path d="M126 126c0-29 9-45 28-45s28 16 28 45v14h-56z" fill="#f4a982"/>
-            <circle cx="109" cy="91" r="15" fill="#f5c99d"/>
-            <path d="M94 91c2-20 31-24 33 0-7-6-12-9-21-8-3 4-7 6-12 8" fill="#705570"/>
-            <path d="M89 143c0-25 6-39 20-39s21 14 21 39v4H89z" fill="#f6d66f"/>
-            <path d="m33 34 3 7 8 1-6 5 1 8-6-4-7 4 2-8-6-5 8-1zM190 35l2 5 6 1-5 4 1 6-5-3-5 3 1-6-4-4 6-1z" fill="#f0bc5e"/>
-            <circle cx="112" cy="27" r="4" fill="#88c9ad"/>
-            <circle cx="205" cy="85" r="3" fill="#a6a1e3"/>
-        </svg>
+        <div class="hero-balance" aria-hidden="true"></div>
     </header>
 
     <section aria-labelledby="familyDetailsHeading">
