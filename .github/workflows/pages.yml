@@ -2,7 +2,7 @@ name: Deploy static site to Pages
 
 on:
   push:
-    branches: ["main"]
+    branches: ["main", "dev"]
   workflow_dispatch:
 
 permissions:
@@ -23,14 +23,29 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          ref: main
+          path: _branches/main
+
+      - name: Checkout dev branch
+        uses: actions/checkout@v4
+        with:
+          ref: dev
+          path: _branches/dev
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
+      - name: Assemble site
+        run: |
+          mkdir -p _site/dev
+          rsync -a --exclude='.git/' --exclude='.github/' --exclude='README.md' _branches/main/ _site/
+          rsync -a --exclude='.git/' --exclude='.github/' --exclude='README.md' _branches/dev/ _site/dev/
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: .
+          path: _site
 
       - name: Deploy to GitHub Pages
         id: deployment

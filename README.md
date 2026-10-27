@@ -8,6 +8,8 @@ The calculator is published on GitHub Pages:
 
 **[Open the Child Support Calculator](https://ncb-git.github.io/support-calculator/)**
 
+**[Open the dev preview](https://ncb-git.github.io/support-calculator/dev/)**
+
 ## Use
 
 Enter the father's and mother's annual gross incomes, relationship duration, and number of children once. Province, primary residence, and age at separation are in the collapsed **Advanced inputs** section. Estimates appear together in the **Compare support scenarios** accordion. Spousal support only is shown when there are no children. Family inputs stay on the page and are not added to the URL.
@@ -32,4 +34,4 @@ No dependencies or build step are required. Open `index.html` in a web browser.
 
 ## Deployment
 
-The GitHub Actions workflow in `.github/workflows/pages.yml` publishes the site to GitHub Pages when changes are pushed to the `main` branch, or when the workflow is run manually.
+The GitHub Actions workflow in `.github/workflows/pages.yml` publishes `main` at the site root and the `dev` branch under `/dev/`. The workflow must be present on both branches so updates to either branch publish the combined site.
